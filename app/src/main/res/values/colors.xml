@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="darkColorPrimary">#8bc34a</color>
+    <color name="darkColorPrimaryDark">#5a9216</color>
+    <color name="darkColorAccent">#880e4f</color>
+    <color name="colorPrimary">#029be5</color>
+    <color name="colorPrimaryDark">#006db3</color>
+    <color name="colorAccent">#81c784</color>
+    <color name="positiveBTN">#00ff44</color>
+    <color name="negativeBTN">#ff0044</color>
+    <color name="fabColor1">#f68a4c</color>
+    <color name="fabColor2">#c873f4</color>
+    <color name="fabColor3">#FF4081</color>
+
+    <!-- FAB mini colors -->
+    <integer-array name="fab_colors">
+        <item>@color/fabColor1</item>
+        <item>@color/fabColor2</item>
+        <item>@color/fabColor3</item>
+    </integer-array>
+
+    <!-- Screens background color-->
+    <color name="bg_screen1">#f6c64c</color>
+    <color name="bg_screen2">#55d220</color>
+    <color name="bg_screen3">#3395ff</color>
+    <color name="bg_screen4">#a333ff</color>
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1">#d1a139</color>
+    <color name="dot_dark_screen2">#48a814</color>
+    <color name="dot_dark_screen3">#2278d4</color>
+    <color name="dot_dark_screen4">#882ad6</color>
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#55d1a139</color>
+    <color name="dot_light_screen2">#5548a814</color>
+    <color name="dot_light_screen3">#552278d4</color>
+    <color name="dot_light_screen4">#55882ad6</color>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen4</item>
+    </array>
+
+    <array name="array_dot_active">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen4</item>
+    </array>
+    <!-- TODO: Poprawić kolorki na welcome screenie + ewentualne przesunięcie btn -->
+</resources>
