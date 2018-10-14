@@ -110,7 +110,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardOption1" />
 
-            <MultiAutoCompleteTextView
+            <TextView
                 android:id="@+id/cardOption2Value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -120,6 +120,7 @@
                 android:layout_marginTop="2dp"
                 android:clickable="false"
                 android:background="@android:color/transparent"
+                android:contextClickable="false"
                 android:hint="@string/wykonaneNaprawy"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"

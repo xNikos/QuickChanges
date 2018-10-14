@@ -67,7 +67,6 @@ public class RVadapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //TODO: Filter recyclerView?!
         View view;
             switch (viewType) {
                 case 0:

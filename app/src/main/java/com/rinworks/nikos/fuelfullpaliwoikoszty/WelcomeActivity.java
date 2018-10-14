@@ -28,15 +28,14 @@ public class WelcomeActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnNext;
-    SharedPreferences dataProccessor = new SharedPreferences(this);
+    SharedPreferences sharedPreferences = new SharedPreferences(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Checking for first time launch - before calling setContentView()
-
-        if (dataProccessor.getBool("FirstRun")) {
+        if (sharedPreferences.getBool("FirstRun")) {
             launchHomeScreen();
             finish();
         }
@@ -111,7 +110,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        dataProccessor.setBool("FirstRun",true);
+        sharedPreferences.setBool("FirstRun",true);
         startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
         finish();
     }

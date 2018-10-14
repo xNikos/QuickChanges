@@ -99,7 +99,6 @@
         android:textColor="@color/negativeBTN"
         app:layout_constraintBaseline_toBaselineOf="@+id/tankowanie_ok_btn"
         app:layout_constraintEnd_toStartOf="@+id/tankowanie_ok_btn" />
-    <!-- TODO: Sprawdzić czy buttony oke (ID) :D -->
 
     <MultiAutoCompleteTextView
         android:id="@+id/TrescValue"

@@ -1,5 +1,8 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty;
-
+//TODO: Cena za litr*ilość litrów | Przeliczanie spalania | Dodawanie do przebiegu | Powiadomienia
+//TODO: Dodanie zdjęcia | Fragment "O autorze" | Model, marka, rok | Optymalizacja? | Smaczki?
+//TODO: nie strzelić sobie w łeb...
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
@@ -56,11 +59,83 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTheme(R.style.AppThemeDark);
         }
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Check if car added
+        //starting popup
+        //Dialog create
+        if (!SharedPreferences.getBool("CarAdded?")) {
+            AlertDialog.Builder popupBuilder = new AlertDialog.Builder(MainActivity.this);
+
+            //Łapanie za navbar i jego header
+            View mView = getLayoutInflater().inflate(R.layout.popup_add_car, null);
+            NavigationView nav = findViewById(R.id.NavigationView);
+            View navBar = nav.getHeaderView(0);
+
+            final TextView marka = navBar.findViewById(R.id.nav_header_name);
+            final TextView model = navBar.findViewById(R.id.nav_header_name2);
+            final TextView rocznik = navBar.findViewById(R.id.nav_header_rocznik);
+            final TextView przebieg = navBar.findViewById(R.id.nav_header_przebiegVal);
+            final EditText markaV = mView.findViewById(R.id.markaValue);
+            final EditText modelV = mView.findViewById(R.id.modelValue);
+            final EditText rocznikV = mView.findViewById(R.id.rocznikValue);
+            final EditText przebiegV = mView.findViewById(R.id.przebiegValue);
+            rocznikV.setFilters(new InputFilter[]{new DecimalDigitsInputFilter
+                    (4, 0)});
+            Button okbtn = mView.findViewById(R.id.tankowanie_ok_btn);
+
+            popupBuilder.setView(mView);
+            final AlertDialog dialog = popupBuilder.create();
+            dialog.show();
+            dialog.setCancelable(false);
+
+            //dialog buttons on click
+            okbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!markaV.getText().toString().isEmpty() && !modelV.getText().toString
+                            ().isEmpty() && !rocznikV.getText().toString().isEmpty() &&
+                            !przebiegV.getText().toString().isEmpty())
+                    {
+                        //FUN
+                        if(rocznikV.getText().toString().length()<4)
+                        {
+                            Toast mToast = Toast.makeText(MainActivity.this, "Aż taki z niego " +
+                                    "staruszek?! :D", Toast
+                                    .LENGTH_SHORT);
+                            mToast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,
+                                    0, 0);
+                            mToast.show();
+                        }
+                        else {
+                            dialog.dismiss();
+                            Snackbar mSnack = Snackbar.make(findViewById(R.id.fragmentContainer),
+                                    "Dodano do bazy! :)", Snackbar
+                                            .LENGTH_LONG);
+                            SharedPreferences.setBool("CarAdded?",true);
+                            mSnack.show();}
+
+                        //todo: Całość do bazy?!  !!! Ehhh...
+                        marka.setText(markaV.getText().toString());
+                        model.setText(modelV.getText().toString());
+                        rocznik.setText(rocznikV.getText().toString());
+                        przebieg.setText(przebiegV.getText().toString());
+
+                    } else {
+                        Toast mToast = Toast.makeText(MainActivity.this, "Proszę wypełnij " +
+                                "wszystkie pola!", Toast.LENGTH_SHORT);
+                        mToast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,
+                                0, 0);
+                        mToast.show();
+
+                    }
+                }
+            });}
+
+
 
         //Default View
         //Na potrzeby fragmentów:
@@ -69,10 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         data.putStringArray("data",list);
         Fragment allExpenses = new AllExpenses();
         allExpenses.setArguments(data);
-        MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
-                .fragmentContainer, allExpenses)
-                .commit();
-
+        MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, allExpenses).commit();
 
         //Navbar reference
         NavigationView navigationView = findViewById(R.id.NavigationView);
@@ -315,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

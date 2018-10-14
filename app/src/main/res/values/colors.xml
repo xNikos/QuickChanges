@@ -49,5 +49,4 @@
         <item>@color/dot_dark_screen3</item>
         <item>@color/dot_dark_screen4</item>
     </array>
-    <!-- TODO: Poprawić kolorki na welcome screenie + ewentualne przesunięcie btn -->
 </resources>
