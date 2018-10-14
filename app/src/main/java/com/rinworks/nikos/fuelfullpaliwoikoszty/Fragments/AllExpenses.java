@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
@@ -24,6 +25,7 @@ import java.util.List;
 public class AllExpenses extends Fragment {
 
     private RecyclerView recyclerView;
+    private TextView textView;
 
 
     //static
@@ -35,7 +37,7 @@ public class AllExpenses extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("Wszystkie wydatki:");
+        getActivity().setTitle("Wszystkie zdarzenia:");
         String[] passedData = getArguments().getStringArray("data");
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
@@ -52,6 +54,9 @@ public class AllExpenses extends Fragment {
         lm.setStackFromEnd(true); //odwrócenie początku (początek u najnowszych)
         recyclerView.setLayoutManager(lm);
 
+        //Initialize "Brak danych!!"
+        textView = rootView.findViewById(R.id.data_string);
+
         //Jeżeli są dane dodaj do bazy
         if (passedData[0] != null) {
             Data data = new Data(0, passedData[0], passedData[1], passedData[2], passedData[3]);
@@ -59,6 +64,13 @@ public class AllExpenses extends Fragment {
         }
         //Wczytaj dane z bazy
         List<Data> loadData = db.DataDao().getAll();
+
+        //Napis Brak danych!!
+        if (loadData.size() != 0)
+            { textView.setVisibility(View.GONE);}
+        else
+            { textView.setVisibility(View.VISIBLE); }
+
         recyclerView.setAdapter(new RVadapter(loadData));
 
         return rootView;

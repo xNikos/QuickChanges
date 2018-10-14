@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
@@ -22,6 +24,8 @@ import java.util.List;
 public class przypomnienieFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private TextView textView;
+
 
 
     //static
@@ -50,12 +54,22 @@ public class przypomnienieFragment extends Fragment {
         lm.setStackFromEnd(true); //odwrócenie początku (początek u najnowszych)
         recyclerView.setLayoutManager(lm);
 
+        //Initialize "Brak danych!!"
+        textView = rootView.findViewById(R.id.data_string);
+
         if (passedData[0] != null) {
             Data data = new Data(2, passedData[0], passedData[1], null, null);
             db.DataDao().insertAll(data);
         }
 
         List<Data> loadData = db.DataDao().selectType(2);
+
+        //Napis Brak danych!!
+        if (loadData.size() != 0)
+        { textView.setVisibility(View.GONE);}
+        else
+        { textView.setVisibility(View.VISIBLE); }
+
         recyclerView.setAdapter(new RVadapter(loadData));
 
         return rootView;

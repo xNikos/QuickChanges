@@ -2,29 +2,37 @@ package com.rinworks.nikos.fuelfullpaliwoikoszty;
 
 import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.InputFilter;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
+import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.SharedPreferences;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.AllExpenses;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.naprawaFragment;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.przypomnienieFragment;
@@ -38,16 +46,33 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
+    SharedPreferences savedData = new SharedPreferences(this);
+    SwitchCompat switchCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Chceck theme status
+        if (SharedPreferences.getBool("Theme")) {
+            setTheme(R.style.AppThemeDark);
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Default View
+        //Na potrzeby fragmentów:
+        Bundle data = new Bundle();
+        String[] list = new String[4];
+        data.putStringArray("data",list);
+        Fragment allExpenses = new AllExpenses();
+        allExpenses.setArguments(data);
+        MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
+                .fragmentContainer, allExpenses)
+                .commit();
+
 
         //Navbar reference
         NavigationView navigationView = findViewById(R.id.NavigationView);
@@ -61,6 +86,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open_navigation_drawer, R.string.close_navigation_drawer);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        //**THEME SWITCHER** | START
+        //Menu reference
+        Menu menu = navigationView.getMenu();
+        //Menu item reference
+        MenuItem item = menu.findItem(R.id.nav_theme);
+        View switcherView = MenuItemCompat.getActionView(item);
+        //Toogle switch theme reference
+        switchCompat = switcherView.findViewById(R.id.switcher);
+        //Radio buton position
+        switchCompat.setChecked(SharedPreferences.getBool("Theme"));
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switchCompat.toggle();
+                return false;
+            }
+        });
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                toogleTheme(isChecked);
+            }
+        });
+        //**THEME SWITCHER** | END
 
         //FAB reference
         final FabSpeedDial fab = findViewById(R.id.extendedFab);
@@ -76,10 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //Dialog create
                         AlertDialog.Builder popupBuilder = new AlertDialog.Builder(MainActivity.this);
                         View mView = getLayoutInflater().inflate(R.layout.popup_tankowanie, null);
-                        TextView tankowanie_title = mView.findViewById(R.id.tankowanie_popup_title);
-                        TextView zatankowano = mView.findViewById(R.id.Zatankowano);
-                        final TextView cenaL = mView.findViewById(R.id.CenaL);
-                        final TextView przejechano = mView.findViewById(R.id.PrzejechanoT);
                         final EditText zatankowanoV = mView.findViewById(R.id.ZatankowanioVALUE);
                         zatankowanoV.setFilters(new InputFilter[]{new DecimalDigitsInputFilter
                                 (2, 2)});
@@ -105,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     Fragment tankowanie = new tankowanieFragment();
                                     Bundle data = new Bundle();
                                     String[] list = new String[4];
-                                    list[0] = zatankowanoV.getText().toString();
-                                    list[1] = CenaLV.getText().toString();
-                                    list[2] = przejechanoV.getText().toString();
+                                    list[0] = zatankowanoV.getText().toString() + "L";
+                                    list[1] = CenaLV.getText().toString() + "ZŁ";
+                                    list[2] = przejechanoV.getText().toString() + "KM";
                                     list[3] = "HARDODED ATM";
                                     data.putStringArray("data",list);
                                     tankowanie.setArguments(data);
@@ -148,10 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 (MainActivity.this);
                         View mViewNotification = getLayoutInflater().inflate(R.layout.popup_przypomnienie,
                                 null);
-                        TextView przypomnienie_title = mViewNotification.findViewById(R.id.przypomnienie_popup_title);
-                        TextView tytul = mViewNotification.findViewById(R.id.Tytuł);
-                        TextView tresc = mViewNotification.findViewById(R.id.Tresc);
-                        TextView kiedy = mViewNotification.findViewById(R.id.Kiedy);
                         final EditText tytulV = mViewNotification.findViewById(R.id.TytulValue);
                         final EditText trescV = mViewNotification.findViewById(R.id.TrescValue);
                         final EditText kiedyV = mViewNotification.findViewById(R.id.KiedyV);
@@ -211,9 +253,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 (MainActivity.this);
                         View mViewRepair = getLayoutInflater().inflate(R.layout.popup_naprawa,
                                 null);
-                        TextView naprawa_title = mViewRepair.findViewById(R.id.naprawa_popup_title);
-                        TextView Zaplacono = mViewRepair.findViewById(R.id.Zaplacono);
-                        TextView Naprawiono = mViewRepair.findViewById(R.id.Naprawiono);
                         final EditText zaplaconoV = mViewRepair.findViewById(R.id.ZaplaconoValue);
                         zaplaconoV.setFilters(new InputFilter[]{new DecimalDigitsInputFilter
                                 (4, 2)});
@@ -234,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     Fragment naprawa = new naprawaFragment();
                                     Bundle data = new Bundle();
                                     String[] list = new String[2];
-                                    list[0] = zaplaconoV.getText().toString();
+                                    list[0] = zaplaconoV.getText().toString() + "ZŁ";
                                     list[1] = naprawionoV.getText().toString();
                                     data.putStringArray("data",list);
                                     naprawa.setArguments(data);
@@ -315,10 +354,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
                         .fragmentContainer, przypomnienie)
                         .commit();
+                break;
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //Theme toogler
+    private void toogleTheme(boolean darkTheme) {
+        SharedPreferences.setBool("Theme", darkTheme);
+        //restart activity
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
 
