@@ -280,39 +280,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        todo: uzupełnić fragmenty
+        //Na potrzeby fragmentów:
+        Bundle data = new Bundle();
+        String[] list = new String[4];
+        data.putStringArray("data",list);
+        //
         switch (item.getItemId()) {
             case R.id.nav_all_expenses:
                 Fragment allExpenses = new AllExpenses();
-                Bundle data = new Bundle();
-                String[] list = new String[4];
-                //TODO: Problem ze skippowaniem leyoutu
-//                list[0] = "cokolwiek";
-//                list[1] = "154.43zł";
-//                list[2] = "666km";
-//                list[3] = "4.5L";
-                data.putStringArray("data",list);
                 allExpenses.setArguments(data);
                 MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
                         .fragmentContainer, allExpenses)
                         .commit();
                 break;
-//
-//            case R.id.nav_fuel_expenses:
-//                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
-//                        .fragmentContainer, new Tankowanie().newInstance()).commit();
-//                break;
-//
-//            case R.id.nav_repair_expenses:
-//                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
-//                        .fragmentContainer, new Naprawa().newInstance()).commit();
-//                break;
-//            case R.id.nav_notifications:
-//                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
-//                        .fragmentContainer, new Przypomnienie().newInstance()).commit();
+
+            case R.id.nav_fuel_expenses:
+                Fragment tankowania = new tankowanieFragment();
+                tankowania.setArguments(data);
+                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
+                        .fragmentContainer, tankowania)
+                        .commit();
+                break;
+
+            case R.id.nav_repair_expenses:
+                Fragment naprawa = new naprawaFragment();
+                naprawa.setArguments(data);
+                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
+                        .fragmentContainer, naprawa)
+                        .commit();
+                break;
+            case R.id.nav_notifications:
+                Fragment przypomnienie = new przypomnienieFragment();
+                przypomnienie.setArguments(data);
+                MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
+                        .fragmentContainer, przypomnienie)
+                        .commit();
         }
-//        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
-//        drawerLayout.closeDrawer(GravityCompat.START);
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

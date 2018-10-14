@@ -13,4 +13,7 @@ public interface DataDAO {
 
     @Insert
     void insertAll(Data... data);
+
+    @Query("SELECT * FROM data WHERE type = :selectedType")
+    List<Data> selectType(int selectedType);
 }

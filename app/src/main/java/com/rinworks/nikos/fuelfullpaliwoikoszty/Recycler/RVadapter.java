@@ -1,5 +1,6 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,10 @@ import android.widget.TextView;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class RVadapter extends RecyclerView.Adapter {
@@ -110,11 +114,137 @@ public class RVadapter extends RecyclerView.Adapter {
                 przypomnienieVH.zaplacono_naprawiono_notatka.setText(mData.get(position)
                         .getZaplacono_naprawiono_notatka());
         }
+
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void setFilter(List<Data> newData)
+    {
+        mData = new List<Data>() {
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return false;
+            }
+
+            @Override
+            public Iterator<Data> iterator() {
+                return null;
+            }
+
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @Override
+            public <T> T[] toArray(T[] a) {
+                return null;
+            }
+
+            @Override
+            public boolean add(Data data) {
+                return false;
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends Data> c) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int index, @NonNull Collection<? extends Data> c) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public Data get(int index) {
+                return null;
+            }
+
+            @Override
+            public Data set(int index, Data element) {
+                return null;
+            }
+
+            @Override
+            public void add(int index, Data element) {
+
+            }
+
+            @Override
+            public Data remove(int index) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public int lastIndexOf(Object o) {
+                return 0;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Data> listIterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Data> listIterator(int index) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public List<Data> subList(int fromIndex, int toIndex) {
+                return null;
+            }
+        };
+        mData.addAll(newData);
+        notifyDataSetChanged();
     }
 
 }

@@ -33,26 +33,29 @@ public class naprawaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("Wszystkie wydatki:");
+        getActivity().setTitle("Wykonane naprawy:");
         String[] passedData = getArguments().getStringArray("data");
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
+        //Initialize DB
+        AppDatabase db = Room.databaseBuilder(getActivity(), AppDatabase.class, "database")
+                .allowMainThreadQueries().build();
+
+        //Initialize Recycler
+        recyclerView = rootView.findViewById(R.id.card_recycler_main);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        lm.setReverseLayout(true); //odwrócenie Layoutu (najnowsze u góry)
+        lm.setStackFromEnd(true); //odwrócenie początku (początek u najnowszych)
+        recyclerView.setLayoutManager(lm);
+
         if (passedData[0] != null) {
-            AppDatabase db = Room.databaseBuilder(getActivity(), AppDatabase.class, "database")
-                    .allowMainThreadQueries().build();
             Data data = new Data(1, passedData[0], passedData[1], null,null);
             db.DataDao().insertAll(data);
-            List<Data> data1 = db.DataDao().getAll();
-
-            recyclerView = rootView.findViewById(R.id.card_recycler_main);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            LinearLayoutManager lm = new LinearLayoutManager(getActivity());
-            lm.setReverseLayout(true);
-            lm.setStackFromEnd(true);
-            recyclerView.setLayoutManager(lm);
-            recyclerView.setAdapter(new RVadapter(data1));
         }
+        List<Data> loadData = db.DataDao().selectType(1);
+        recyclerView.setAdapter(new RVadapter(loadData));
         return rootView;
     }
 
