@@ -222,12 +222,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         ().isEmpty() && !przejechanoV.getText().toString().isEmpty()) {
                                     Fragment tankowanie = new tankowanieFragment();
                                     Bundle data = new Bundle();
-                                    String[] list = new String[4];
-                                    list[0] = zatankowanoV.getText().toString() + "L";
-                                    list[1] = CenaLV.getText().toString() + "ZŁ";
-                                    list[2] = przejechanoV.getText().toString() + "KM";
-                                    list[3] = "HARDODED ATM";
-                                    data.putStringArray("data",list);
+//                                    String[] list = new String[4];
+//                                    list[0] = zatankowanoV.getText().toString() + "L";
+//                                    list[1] = CenaLV.getText().toString() + "ZŁ";
+//                                    list[2] = przejechanoV.getText().toString() + "KM";
+//                                    list[3] = "HARDODED ATM";
+//                                    data.putStringArray("data",list);
+                                    float [] val = new float[3];
+                                    val[0] = Float.valueOf(zatankowanoV.getText().toString());
+                                    val[1] = Float.valueOf(CenaLV.getText().toString());
+                                    val[2] = Float.valueOf(przejechanoV.getText().toString());
+                                    data.putFloatArray("data",val);
                                     tankowanie.setArguments(data);
                                     dialog.dismiss();
                                     MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id
@@ -344,10 +349,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                 ().isEmpty()) {
                                     Fragment naprawa = new naprawaFragment();
                                     Bundle data = new Bundle();
-                                    String[] list = new String[2];
-                                    list[0] = zaplaconoV.getText().toString() + "ZŁ";
-                                    list[1] = naprawionoV.getText().toString();
-                                    data.putStringArray("data",list);
+//                                    String[] list = new String[2];
+//                                    list[0] = zaplaconoV.getText().toString() + "ZŁ";
+//                                    list[1] = naprawionoV.getText().toString();
+//                                    data.putStringArray("data",list);
+                                    float val = Float.valueOf(zaplaconoV.getText().toString());
+                                    data.putFloat("ZapłaconoV", val);
+                                    String str = naprawionoV.getText().toString();
+                                    data.putString("NaprawionoV", str);
                                     naprawa.setArguments(data);
                                     dialogRepair.dismiss();
                                     MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id

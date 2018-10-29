@@ -58,7 +58,7 @@ public class przypomnienieFragment extends Fragment {
         textView = rootView.findViewById(R.id.data_string);
 
         if (passedData[0] != null) {
-            Data data = new Data(2, passedData[0], passedData[1], null, null);
+            Data data = new Data(2, 0,0,0,passedData[1],passedData[0]);
             db.DataDao().insertAll(data);
         }
 

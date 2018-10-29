@@ -38,7 +38,9 @@ public class naprawaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Wykonane naprawy:");
-        String[] passedData = getArguments().getStringArray("data");
+        //String[] passedData = getArguments().getStringArray("data");
+        float zapV = getArguments().getFloat("ZapłaconoV");
+        String napV = getArguments().getString("NaprawionoV");
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
         //Initialize DB
@@ -57,8 +59,8 @@ public class naprawaFragment extends Fragment {
         //Initialize "Brak danych!!"
         textView = rootView.findViewById(R.id.data_string);
 
-        if (passedData[0] != null) {
-            Data data = new Data(1, passedData[0], passedData[1], null,null);
+        if (napV != null) {
+            Data data = new Data(1, 0, zapV, 0, napV, null);
             db.DataDao().insertAll(data);
         }
         List<Data> loadData = db.DataDao().selectType(1);

@@ -12,25 +12,32 @@ public class Data {
     @ColumnInfo(name = "type")
     private int type;
 
-    @ColumnInfo(name = "zatankowano_zaplacono_notatka")
-    private String zatankowano_zaplacono_tytulNotatki;
+    @ColumnInfo(name = "spalanie")
+    private float spalanie;
 
-    @ColumnInfo(name = "zaplacono_naprawiono")
-    private String zaplacono_naprawiono_notatka;
+    @ColumnInfo(name = "zatankowano")
+    private float zatankowano;
+
+    @ColumnInfo(name = "zaplacono")
+    private float zaplacono;
 
     @ColumnInfo(name = "przejechano")
-    private String przejechano;
+    private float przejechano;
 
-    @ColumnInfo(name = "spalanie")
-    private String spalanie;
+    @ColumnInfo(name = "notatka_naprawiono")
+    private String notatka_naprawiono;
 
-    public Data(int type, String zatankowano_zaplacono_tytulNotatki, String zaplacono_naprawiono_notatka,
-                String przejechano, String spalanie) {
+    @ColumnInfo(name = "tytulNotatki")
+    private String tytulNotatki;
+
+    public Data(int type, float zatankowano, float zaplacono, float przejechano, String
+            notatka_naprawiono, String tytulNotatki) {
         this.type = type;
-        this.zatankowano_zaplacono_tytulNotatki = zatankowano_zaplacono_tytulNotatki;
-        this.zaplacono_naprawiono_notatka = zaplacono_naprawiono_notatka;
+        this.zatankowano = zatankowano;
+        this.zaplacono = zaplacono;
         this.przejechano = przejechano;
-        this.spalanie = spalanie;
+        this.notatka_naprawiono = notatka_naprawiono;
+        this.tytulNotatki = tytulNotatki;
     }
 
     public int getId() {
@@ -49,36 +56,52 @@ public class Data {
         this.type = type;
     }
 
-    public String getZatankowano_zaplacono_tytulNotatki() {
-        return zatankowano_zaplacono_tytulNotatki;
-    }
-
-    public void setZatankowano_zaplacono_tytulNotatki(String zatankowano_zaplacono_tytulNotatki) {
-        this.zatankowano_zaplacono_tytulNotatki = zatankowano_zaplacono_tytulNotatki;
-    }
-
-    public String getZaplacono_naprawiono_notatka() {
-        return zaplacono_naprawiono_notatka;
-    }
-
-    public void setZaplacono_naprawiono_notatka(String zaplacono_naprawiono_notatka) {
-        this.zaplacono_naprawiono_notatka = zaplacono_naprawiono_notatka;
-    }
-
-    public String getPrzejechano() {
-        return przejechano;
-    }
-
-    public void setPrzejechano(String przejechano) {
-        this.przejechano = przejechano;
-    }
-
-    public String getSpalanie() {
+    public float getSpalanie() {
         return spalanie;
     }
 
-    public void setSpalanie(String spalanie) {
+    public void setSpalanie(float spalanie) {
         this.spalanie = spalanie;
+    }
+
+    public float getZatankowano() {
+        return zatankowano;
+    }
+
+    public void setZatankowano(float zatankowano) {
+        this.zatankowano = zatankowano;
+    }
+
+    public float getZaplacono() {
+        return zaplacono;
+    }
+
+    public void setZaplacono(float zaplacono) {
+        this.zaplacono = zaplacono;
+    }
+
+    public float getPrzejechano() {
+        return przejechano;
+    }
+
+    public void setPrzejechano(float przejechano) {
+        this.przejechano = przejechano;
+    }
+
+    public String getNotatka_naprawiono() {
+        return notatka_naprawiono;
+    }
+
+    public void setNotatka_naprawiono(String notatka_naprawiono) {
+        this.notatka_naprawiono = notatka_naprawiono;
+    }
+
+    public String getTytulNotatki() {
+        return tytulNotatki;
+    }
+
+    public void setTytulNotatki(String tytulNotatki) {
+        this.tytulNotatki = tytulNotatki;
     }
 }
 

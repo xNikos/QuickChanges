@@ -57,11 +57,11 @@ public class AllExpenses extends Fragment {
         //Initialize "Brak danych!!"
         textView = rootView.findViewById(R.id.data_string);
 
-        //Jeżeli są dane dodaj do bazy
-        if (passedData[0] != null) {
-            Data data = new Data(0, passedData[0], passedData[1], passedData[2], passedData[3]);
-            db.DataDao().insertAll(data);
-        }
+//        //Jeżeli są dane dodaj do bazy
+//        if (passedData[0] != null) {
+//            Data data = new Data(0, passedData[0], passedData[1], passedData[2], passedData[3]);
+//            db.DataDao().insertAll(data);
+//        }
         //Wczytaj dane z bazy
         List<Data> loadData = db.DataDao().getAll();
 

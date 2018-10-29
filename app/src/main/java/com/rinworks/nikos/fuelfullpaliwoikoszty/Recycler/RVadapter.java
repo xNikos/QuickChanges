@@ -94,24 +94,31 @@ public class RVadapter extends RecyclerView.Adapter {
         switch (holder.getItemViewType()) {
             case 0:
                 TankowanieVH tankowanieVH = (TankowanieVH) holder;
-                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(mData.get(position).getZatankowano_zaplacono_tytulNotatki());
-                tankowanieVH.zaplacono_naprawiono.setText(mData.get(position).getZaplacono_naprawiono_notatka());
-                tankowanieVH.przejechano.setText(mData.get(position).getPrzejechano());
-                tankowanieVH.spalanie.setText(mData.get(position).getSpalanie());
+                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
+                        (position).getZatankowano()));
+                tankowanieVH.zaplacono_naprawiono.setText(String.valueOf(mData.get(position)
+                        .getZaplacono()));
+                tankowanieVH.przejechano.setText(String.valueOf(mData.get(position).getPrzejechano()));
+                if(position!=0) {
+                    tankowanieVH.spalanie.setText(String.valueOf((mData.get(position-1)
+                            .getZatankowano())/(mData.get(position).getPrzejechano()) *100 ));
+                }
+                else
+                { tankowanieVH.spalanie.setText("--"); }
                 break;
             case 1:
                 NaprawaVH naprawaVH = (NaprawaVH) holder;
-                naprawaVH.zatankowano_zaplacono_tytulNotatki.setText(mData.get(position)
-                        .getZatankowano_zaplacono_tytulNotatki());
+                naprawaVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
+                        (position).getZaplacono()));
                 naprawaVH.zaplacono_naprawiono.setText(mData.get(position)
-                        .getZaplacono_naprawiono_notatka());
+                        .getNotatka_naprawiono());
                 break;
             case 2:
                 PrzypomnienieVH przypomnienieVH = (PrzypomnienieVH) holder;
                 przypomnienieVH.zatankowano_zaplacono_tytulNotatki.setText(mData.get(position)
-                        .getZatankowano_zaplacono_tytulNotatki());
+                        .getTytulNotatki());
                 przypomnienieVH.zaplacono_naprawiono_notatka.setText(mData.get(position)
-                        .getZaplacono_naprawiono_notatka());
+                        .getNotatka_naprawiono());
         }
 
     }

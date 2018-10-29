@@ -38,7 +38,8 @@ public class tankowanieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Tankowania:");
-        String[] passedData = getArguments().getStringArray("data");
+        float[] passedData = getArguments().getFloatArray("data");
+        //String[] passedData = getArguments().getStringArray("data");
 
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
@@ -58,8 +59,8 @@ public class tankowanieFragment extends Fragment {
         //Initialize "Brak danych!!"
         textView = rootView.findViewById(R.id.data_string);
 
-        if (passedData[0] != null) {
-            Data data = new Data(0, passedData[0], passedData[1], passedData[2], passedData[3]);
+        if (passedData != null) {
+            Data data = new Data(0,passedData[0],passedData[1],passedData[2],null,null);
             db.DataDao().insertAll(data);
         }
 
