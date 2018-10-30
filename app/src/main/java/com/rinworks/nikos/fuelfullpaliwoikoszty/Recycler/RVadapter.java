@@ -1,5 +1,6 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler;
 
+import android.arch.persistence.room.Room;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 
@@ -67,6 +69,7 @@ public class RVadapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view;
             switch (viewType) {
                 case 0:
@@ -91,17 +94,37 @@ public class RVadapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        String st = String.valueOf(mData.get(position).getZatankowano());
+        float zaplaconoV = (float) Math.round((mData.get(position).getZaplacono())*(mData.get
+                (position).getZatankowano()) *100)/100;
+        String nd = String.valueOf(zaplaconoV);
+        String rd = String.valueOf(mData.get(position).getPrzejechano());
+
+
         switch (holder.getItemViewType()) {
             case 0:
                 TankowanieVH tankowanieVH = (TankowanieVH) holder;
-                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
-                        (position).getZatankowano()));
-                tankowanieVH.zaplacono_naprawiono.setText(String.valueOf(mData.get(position)
-                        .getZaplacono()));
-                tankowanieVH.przejechano.setText(String.valueOf(mData.get(position).getPrzejechano()));
+                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(st + " L");
+                tankowanieVH.zaplacono_naprawiono.setText(nd + " ZŁ");
+                tankowanieVH.przejechano.setText(rd + " KM");
                 if(position!=0) {
-                    tankowanieVH.spalanie.setText(String.valueOf((mData.get(position-1)
-                            .getZatankowano())/(mData.get(position).getPrzejechano()) *100 ));
+                    float spalanieV = (float) Math.round((mData.get(position-1).getZatankowano())/
+                            (mData
+                            .get
+                            (position).getPrzejechano())*10000)/100;
+                    String th = String.valueOf(spalanieV);
+                    tankowanieVH.spalanie.setText(th + " L/100");
+
+                //                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
+//                        (position).getZatankowano()));
+//                tankowanieVH.zaplacono_naprawiono.setText(String.valueOf(mData.get(position)
+//                        .getZaplacono()));
+//                tankowanieVH.przejechano.setText(String.valueOf(mData.get(position).getPrzejechano()));
+//                if(position!=0) {
+//                    tankowanieVH.spalanie.setText(String.valueOf((mData.get(position-1)
+//                            .getZatankowano())/(mData.get(position).getPrzejechano()) *100 ));
+
                 }
                 else
                 { tankowanieVH.spalanie.setText("--"); }
@@ -109,7 +132,7 @@ public class RVadapter extends RecyclerView.Adapter {
             case 1:
                 NaprawaVH naprawaVH = (NaprawaVH) holder;
                 naprawaVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
-                        (position).getZaplacono()));
+                        (position).getZaplacono()) + " ZŁ");
                 naprawaVH.zaplacono_naprawiono.setText(mData.get(position)
                         .getNotatka_naprawiono());
                 break;

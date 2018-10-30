@@ -1,6 +1,5 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty;
-//TODO: Cena za litr*ilość litrów | Przeliczanie spalania | Dodawanie do przebiegu | Powiadomienia
-//TODO: Dodanie zdjęcia | Fragment "O autorze" | Model, marka, rok | Optymalizacja? | Smaczki?
+//TODO: Powiadomienia | Dodanie zdjęcia | Fragment "O autorze" | Optymalizacja? | Smaczki?
 //TODO: nie strzelić sobie w łeb...
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.SharedPreferences;
@@ -42,6 +43,7 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.przypomnienieFragment;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.tankowanieFragment;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +53,17 @@ import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences savedData = new SharedPreferences(this);
     SwitchCompat switchCompat;
+    int updateLicznik; //update drawer licznik
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //View Shared&Room
+        Stetho.initializeWithDefaults(this);
+
+        //Initialize DB
+        AppDatabase db = Room.databaseBuilder(this, AppDatabase.class, "database").allowMainThreadQueries().build();
+        updateLicznik = db.DataDao().selectType(0).size();
+
         //Chceck theme status
         if (SharedPreferences.getBool("Theme")) {
             setTheme(R.style.AppThemeDark);
@@ -70,15 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!SharedPreferences.getBool("CarAdded?")) {
             AlertDialog.Builder popupBuilder = new AlertDialog.Builder(MainActivity.this);
 
-            //Łapanie za navbar i jego header
+            //Łapanie za odpowiedni Layout
             View mView = getLayoutInflater().inflate(R.layout.popup_add_car, null);
-            NavigationView nav = findViewById(R.id.NavigationView);
-            View navBar = nav.getHeaderView(0);
-
-            final TextView marka = navBar.findViewById(R.id.nav_header_name);
-            final TextView model = navBar.findViewById(R.id.nav_header_name2);
-            final TextView rocznik = navBar.findViewById(R.id.nav_header_rocznik);
-            final TextView przebieg = navBar.findViewById(R.id.nav_header_przebiegVal);
             final EditText markaV = mView.findViewById(R.id.markaValue);
             final EditText modelV = mView.findViewById(R.id.modelValue);
             final EditText rocznikV = mView.findViewById(R.id.rocznikValue);
@@ -118,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             SharedPreferences.setBool("CarAdded?",true);
                             mSnack.show();}
 
-                        //todo: Całość do bazy?!  !!! Ehhh...
-                        marka.setText(markaV.getText().toString());
-                        model.setText(modelV.getText().toString());
-                        rocznik.setText(rocznikV.getText().toString());
-                        przebieg.setText(przebiegV.getText().toString());
+                        SharedPreferences.setStr("Marka",markaV.getText().toString());
+                        SharedPreferences.setStr("Model",modelV.getText().toString());
+                        SharedPreferences.setStr("Rocznik",rocznikV.getText().toString());
+                        SharedPreferences.setFloat("Przebieg",Float.valueOf(przebiegV.getText().toString()));
+
 
                     } else {
                         Toast mToast = Toast.makeText(MainActivity.this, "Proszę wypełnij " +
@@ -134,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });}
-
-
 
         //Default View
         //Na potrzeby fragmentów:
@@ -155,9 +156,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
 
         //Adding hamburger icon to drawer
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open_navigation_drawer, R.string.close_navigation_drawer);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open_navigation_drawer, R.string.close_navigation_drawer);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                updateValues();
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+
 
         //**THEME SWITCHER** | START
         //Menu reference
@@ -222,12 +246,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         ().isEmpty() && !przejechanoV.getText().toString().isEmpty()) {
                                     Fragment tankowanie = new tankowanieFragment();
                                     Bundle data = new Bundle();
-//                                    String[] list = new String[4];
-//                                    list[0] = zatankowanoV.getText().toString() + "L";
-//                                    list[1] = CenaLV.getText().toString() + "ZŁ";
-//                                    list[2] = przejechanoV.getText().toString() + "KM";
-//                                    list[3] = "HARDODED ATM";
-//                                    data.putStringArray("data",list);
                                     float [] val = new float[3];
                                     val[0] = Float.valueOf(zatankowanoV.getText().toString());
                                     val[1] = Float.valueOf(CenaLV.getText().toString());
@@ -349,10 +367,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                 ().isEmpty()) {
                                     Fragment naprawa = new naprawaFragment();
                                     Bundle data = new Bundle();
-//                                    String[] list = new String[2];
-//                                    list[0] = zaplaconoV.getText().toString() + "ZŁ";
-//                                    list[1] = naprawionoV.getText().toString();
-//                                    data.putStringArray("data",list);
                                     float val = Float.valueOf(zaplaconoV.getText().toString());
                                     data.putFloat("ZapłaconoV", val);
                                     String str = naprawionoV.getText().toString();
@@ -448,6 +462,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         finish();
         startActivity(intent);
+    }
+
+    //Odświeżanie wartości na drawerze
+    private void updateValues() {
+        NavigationView nav = findViewById(R.id.NavigationView);
+        View navBar = nav.getHeaderView(0);
+
+        final TextView przebieg = navBar.findViewById(R.id.nav_header_przebiegVal);
+        final TextView spalanie = navBar.findViewById(R.id.nav_header_spalanieVal);
+        final TextView marka = navBar.findViewById(R.id.nav_header_name);
+        final TextView model = navBar.findViewById(R.id.nav_header_name2);
+        final TextView rocznik = navBar.findViewById(R.id.nav_header_rocznik);
+        TextView spalanietext = navBar.findViewById(R.id.nav_header_hardcodedL);
+
+        AppDatabase db = Room.databaseBuilder(this, AppDatabase.class, "database").allowMainThreadQueries().build();
+
+        float przeDb = db.DataDao().przebieg(0);
+        float przeSH = SharedPreferences.getFloat("Przebieg");
+        float tankDb = db.DataDao().zatankowano(db.DataDao().selectType(0).size()-1,0);
+        float spaV = tankDb/przeDb*100;
+        float przef = przeDb+przeSH;
+
+        if(db.DataDao().selectType(0).size()>updateLicznik){
+            updateLicznik+=1;
+
+            przebieg.setText(String.format("%.2f",przef));
+            spalanie.setText(String.format("%.2f",spaV));
+
+            SharedPreferences.setFloat("Przebieg",przef);
+
+        }
+        else
+        {
+            przebieg.setText(String.format("%.2f",przeSH));
+            marka.setText(SharedPreferences.getStr("Marka"));
+            model.setText(SharedPreferences.getStr("Model"));
+            rocznik.setText(SharedPreferences.getStr("Rocznik"));
+            if(db.DataDao().selectType(0).size() > 1)
+            {
+                spalanie.setVisibility(View.VISIBLE);
+                spalanietext.setVisibility(View.VISIBLE);
+                spalanie.setText(String.format("%.2f",spaV));
+            }
+            else
+                {
+                    spalanie.setVisibility(View.GONE);
+                    spalanietext.setVisibility(View.GONE);
+                }
+        }
+
     }
 
 

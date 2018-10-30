@@ -33,5 +33,8 @@ dependencies {
     implementation 'io.github.yavski:fab-speed-dial:1.0.6' //fab
     implementation "android.arch.persistence.room:runtime:1.1.1" //rooom database
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1" //room database compiler
+    implementation 'com.facebook.stetho:stetho:1.5.0' //room&shared chromeview
+
+
 
 }
