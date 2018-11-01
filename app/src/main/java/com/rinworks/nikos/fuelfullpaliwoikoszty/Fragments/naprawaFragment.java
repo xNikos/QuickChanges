@@ -26,14 +26,6 @@ public class naprawaFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView textView;
 
-
-
-    //static
-    public naprawaFragment newInstance()
-    {
-        naprawaFragment naprawa =new naprawaFragment();
-        return naprawa;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {

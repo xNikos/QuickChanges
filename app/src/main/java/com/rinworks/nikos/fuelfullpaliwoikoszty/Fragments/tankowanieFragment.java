@@ -26,14 +26,6 @@ public class tankowanieFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView textView;
 
-
-
-    //static
-    public tankowanieFragment newInstance()
-    {
-        tankowanieFragment tankowanie =new tankowanieFragment();
-        return tankowanie;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {

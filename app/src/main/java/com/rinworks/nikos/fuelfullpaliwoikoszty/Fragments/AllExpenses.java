@@ -27,18 +27,10 @@ public class AllExpenses extends Fragment {
     private RecyclerView recyclerView;
     private TextView textView;
 
-
-    //static
-    public AllExpenses newInstance()
-    {
-        AllExpenses allExpenses=new AllExpenses();
-        return allExpenses;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Wszystkie zdarzenia:");
-        String[] passedData = getArguments().getStringArray("data");
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
         //Initialize DB
@@ -57,11 +49,6 @@ public class AllExpenses extends Fragment {
         //Initialize "Brak danych!!"
         textView = rootView.findViewById(R.id.data_string);
 
-//        //Jeżeli są dane dodaj do bazy
-//        if (passedData[0] != null) {
-//            Data data = new Data(0, passedData[0], passedData[1], passedData[2], passedData[3]);
-//            db.DataDao().insertAll(data);
-//        }
         //Wczytaj dane z bazy
         List<Data> loadData = db.DataDao().getAll();
 

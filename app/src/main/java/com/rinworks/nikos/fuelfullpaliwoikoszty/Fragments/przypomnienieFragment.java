@@ -26,14 +26,6 @@ public class przypomnienieFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView textView;
 
-
-
-    //static
-    public przypomnienieFragment newInstance()
-    {
-        przypomnienieFragment przypomnienie =new przypomnienieFragment();
-        return przypomnienie;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
