@@ -56,8 +56,10 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
@@ -66,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences savedData = new SharedPreferences(this);
     SwitchCompat switchCompat;
     int updateLicznik; //update drawer licznik
-
-    //test
     Button selectImg;
     ImageView imgSelected;
     private int REQUEST_CODE=1;

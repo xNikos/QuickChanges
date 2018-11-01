@@ -12,8 +12,8 @@ public class Data {
     @ColumnInfo(name = "type")
     private int type;
 
-    @ColumnInfo(name = "spalanie")
-    private float spalanie;
+    @ColumnInfo (name = "data")
+    private String data;
 
     @ColumnInfo(name = "zatankowano")
     private float zatankowano;
@@ -31,13 +31,22 @@ public class Data {
     private String tytulNotatki;
 
     public Data(int type, float zatankowano, float zaplacono, float przejechano, String
-            notatka_naprawiono, String tytulNotatki) {
+            notatka_naprawiono, String tytulNotatki, String data) {
         this.type = type;
         this.zatankowano = zatankowano;
         this.zaplacono = zaplacono;
         this.przejechano = przejechano;
         this.notatka_naprawiono = notatka_naprawiono;
         this.tytulNotatki = tytulNotatki;
+        this.data = data;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public int getId() {
@@ -54,14 +63,6 @@ public class Data {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public float getSpalanie() {
-        return spalanie;
-    }
-
-    public void setSpalanie(float spalanie) {
-        this.spalanie = spalanie;
     }
 
     public float getZatankowano() {
@@ -104,5 +105,6 @@ public class Data {
         this.tytulNotatki = tytulNotatki;
     }
 }
+
 
 

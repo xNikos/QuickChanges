@@ -1,0 +1,41 @@
+[33mcommit 1c425a153670115132fa382378b6d65825bb5272[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Thu Nov 1 17:17:20 2018 +0100
+
+    Added Image Support
+
+[33mcommit c38f982a11fcef86b133dd6a0c8fa45b0f7166bb[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Tue Oct 30 03:50:07 2018 +0100
+
+    functional beta?!
+
+[33mcommit 40f364f55228aeefec30ad88e615568bef21ea4e[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Mon Oct 29 23:17:47 2018 +0100
+
+    Zamiana typów + przeliczanie spalania
+
+[33mcommit c40fb8c5f0c58cd408d074e52aa5ec207e432b54[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Sun Oct 14 23:15:24 2018 +0200
+
+    more_changes
+
+[33mcommit 23de463caf93660b92f338db7091aabfdd2e7bef[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Sun Oct 14 21:03:51 2018 +0200
+
+    WelcomeS+Room+RV+Popups+Cosmetic
+
+[33mcommit b18db4fe1076129e8b4a89f8f62507085d2d9428[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Sun Oct 14 19:01:22 2018 +0200
+
+    workingDatabase_with_filtering
+
+[33mcommit 23c7ded965d84b0590587ccedfcabc3fc2e9ca01[m
+Author: xNikos <nikos.sinx@gmail.com>
+Date:   Sun Oct 14 01:59:06 2018 +0200
+
+    further_changes

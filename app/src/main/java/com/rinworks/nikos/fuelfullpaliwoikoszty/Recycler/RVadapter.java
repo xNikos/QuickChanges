@@ -28,6 +28,7 @@ public class RVadapter extends RecyclerView.Adapter {
         TextView zaplacono_naprawiono;
         TextView przejechano;
         TextView spalanie;
+        TextView data;
 
         public TankowanieVH(View itemView) {
             super(itemView);
@@ -36,29 +37,34 @@ public class RVadapter extends RecyclerView.Adapter {
             this.zaplacono_naprawiono = (TextView) itemView.findViewById(R.id.cardOption2Value);
             this.przejechano = (TextView) itemView.findViewById(R.id.cardOption3Value);
             this.spalanie = (TextView) itemView.findViewById(R.id.cardOption4Value);
+            this.data = (TextView) itemView.findViewById(R.id.Date);
         }
     }
 
     class NaprawaVH extends RecyclerView.ViewHolder {
         TextView zatankowano_zaplacono_tytulNotatki;
         TextView zaplacono_naprawiono;
+        TextView data;
         public NaprawaVH(View itemView) {
             super(itemView);
             this.zatankowano_zaplacono_tytulNotatki = (TextView) itemView.findViewById(R.id
                     .cardOption1Value);
             this.zaplacono_naprawiono = (TextView) itemView.findViewById(R.id.cardOption2Value);
+            this.data = (TextView) itemView.findViewById(R.id.Date);
         }
     }
 
     class PrzypomnienieVH extends RecyclerView.ViewHolder {
         TextView zatankowano_zaplacono_tytulNotatki;
         TextView zaplacono_naprawiono_notatka;
+        TextView data;
         public PrzypomnienieVH(View itemView) {
             super(itemView);
             this.zatankowano_zaplacono_tytulNotatki = (TextView) itemView.findViewById(R.id
                     .cardTitleP);
             this.zaplacono_naprawiono_notatka = (TextView) itemView.findViewById(R.id
                     .cardOption1Value);
+            this.data = (TextView) itemView.findViewById(R.id.Date);
         }
     }
 
@@ -100,6 +106,7 @@ public class RVadapter extends RecyclerView.Adapter {
                 (position).getZatankowano()) *100)/100;
         String nd = String.valueOf(zaplaconoV);
         String rd = String.valueOf(mData.get(position).getPrzejechano());
+        String data = mData.get(position).getData();
 
 
         switch (holder.getItemViewType()) {
@@ -108,6 +115,7 @@ public class RVadapter extends RecyclerView.Adapter {
                 tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(st + " L");
                 tankowanieVH.zaplacono_naprawiono.setText(nd + " ZŁ");
                 tankowanieVH.przejechano.setText(rd + " KM");
+                tankowanieVH.data.setText(data);
                 if(position!=0) {
                     float spalanieV = (float) Math.round((mData.get(position-1).getZatankowano())/
                             (mData
@@ -115,16 +123,6 @@ public class RVadapter extends RecyclerView.Adapter {
                             (position).getPrzejechano())*10000)/100;
                     String th = String.valueOf(spalanieV);
                     tankowanieVH.spalanie.setText(th + " L/100");
-
-                //                tankowanieVH.zatankowano_zaplacono_tytulNotatki.setText(String.valueOf(mData.get
-//                        (position).getZatankowano()));
-//                tankowanieVH.zaplacono_naprawiono.setText(String.valueOf(mData.get(position)
-//                        .getZaplacono()));
-//                tankowanieVH.przejechano.setText(String.valueOf(mData.get(position).getPrzejechano()));
-//                if(position!=0) {
-//                    tankowanieVH.spalanie.setText(String.valueOf((mData.get(position-1)
-//                            .getZatankowano())/(mData.get(position).getPrzejechano()) *100 ));
-
                 }
                 else
                 { tankowanieVH.spalanie.setText("--"); }
@@ -135,6 +133,7 @@ public class RVadapter extends RecyclerView.Adapter {
                         (position).getZaplacono()) + " ZŁ");
                 naprawaVH.zaplacono_naprawiono.setText(mData.get(position)
                         .getNotatka_naprawiono());
+                naprawaVH.data.setText(mData.get(position).getData());
                 break;
             case 2:
                 PrzypomnienieVH przypomnienieVH = (PrzypomnienieVH) holder;
@@ -142,6 +141,7 @@ public class RVadapter extends RecyclerView.Adapter {
                         .getTytulNotatki());
                 przypomnienieVH.zaplacono_naprawiono_notatka.setText(mData.get(position)
                         .getNotatka_naprawiono());
+                przypomnienieVH.data.setText(mData.get(position).getData());
         }
 
     }

@@ -18,6 +18,10 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,10 +33,15 @@ public class naprawaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("Wykonane naprawy:");
-        //String[] passedData = getArguments().getStringArray("data");
+        getActivity().setTitle("Wykonane naprawy:");;
         float zapV = getArguments().getFloat("ZapłaconoV");
         String napV = getArguments().getString("NaprawionoV");
+
+        //Wygenerowanie Daty
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("dd MMM yyyy || 'Godz.'HH:mm");
+        Date GetDate = new Date();
+        String DateStr = timeStampFormat.format(GetDate);
+
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
         //Initialize DB
@@ -52,7 +61,7 @@ public class naprawaFragment extends Fragment {
         textView = rootView.findViewById(R.id.data_string);
 
         if (napV != null) {
-            Data data = new Data(1, 0, zapV, 0, napV, null);
+            Data data = new Data(1, 0, zapV, 0, napV, null,DateStr);
             db.DataDao().insertAll(data);
         }
         List<Data> loadData = db.DataDao().selectType(1);

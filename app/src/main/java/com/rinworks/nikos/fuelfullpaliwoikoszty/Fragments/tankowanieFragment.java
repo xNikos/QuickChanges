@@ -18,6 +18,10 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,7 +35,12 @@ public class tankowanieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Tankowania:");
         float[] passedData = getArguments().getFloatArray("data");
-        //String[] passedData = getArguments().getStringArray("data");
+
+        //Wygenerowanie Daty
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("dd MMM yyyy || 'Godz.'HH:mm");
+        Date GetDate = new Date();
+        String DateStr = timeStampFormat.format(GetDate);
+
 
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
@@ -52,7 +61,7 @@ public class tankowanieFragment extends Fragment {
         textView = rootView.findViewById(R.id.data_string);
 
         if (passedData != null) {
-            Data data = new Data(0,passedData[0],passedData[1],passedData[2],null,null);
+            Data data = new Data(0,passedData[0],passedData[1],passedData[2],null,null,DateStr);
             db.DataDao().insertAll(data);
         }
 

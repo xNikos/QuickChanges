@@ -18,6 +18,10 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,6 +35,12 @@ public class przypomnienieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle("Twoje przypomnienia:");
         String[] passedData = getArguments().getStringArray("data");
+
+        //Wygenerowanie Daty
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("dd MMM yyyy || 'Godz.'HH:mm");
+        Date GetDate = new Date();
+        String DateStr = timeStampFormat.format(GetDate);
+
         View rootView = inflater.inflate(R.layout.fragment_main_layout, container, false);
 
         //Initialize DB
@@ -50,7 +60,7 @@ public class przypomnienieFragment extends Fragment {
         textView = rootView.findViewById(R.id.data_string);
 
         if (passedData[0] != null) {
-            Data data = new Data(2, 0,0,0,passedData[1],passedData[0]);
+            Data data = new Data(2, 0,0,0,passedData[1],passedData[0],DateStr);
             db.DataDao().insertAll(data);
         }
 
