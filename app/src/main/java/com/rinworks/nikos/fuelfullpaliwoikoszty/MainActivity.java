@@ -1,14 +1,19 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty;
-//TODO: Powiadomienia | Dodanie zdjęcia | Fragment "O autorze" | Optymalizacja? | Smaczki?
+//TODO: Powiadomienia | Fragment "O autorze" | Optymalizacja? | Smaczki?
 //TODO: nie strzelić sobie w łeb...
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.PersistableBundle;
@@ -39,9 +44,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
@@ -71,11 +78,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button selectImg;
     ImageView imgSelected;
     private int REQUEST_CODE=1;
+    private DatePickerDialog.OnDateSetListener DataListener;
+    int mhour;
+    int mminute;
+    int mday;
+    int mmonth;
+    int myear;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         //View Shared&Room
         Stetho.initializeWithDefaults(this);
 
@@ -92,6 +105,92 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //TEST SECTION | START
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minute = calendar.get(Calendar.MINUTE);
+
+
+        if (SharedPreferences.getBool("Theme"))
+        {
+            //Dark Theme
+            DatePickerDialog dataDialog = new DatePickerDialog(
+                    MainActivity.this, R.style.DialogDark , new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+
+                    TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
+                            .DialogTDark, new
+                            TimePickerDialog
+                            .OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                            mhour = hourOfDay;
+                            mminute = minute;
+                            mday = dayOfMonth;
+                            mmonth = month +1;
+                            myear = year;
+
+
+                            Snackbar.make(findViewById(R.id.drawerLayout),+mday+"" +
+                                    "."+mmonth+"" +
+                                            "."+myear+" || "+mhour+":"+mminute, Snackbar
+                                    .LENGTH_LONG).show();
+                        }
+                    }, hour,minute,true);
+                    timeDialog.show();
+
+                }
+            },year, month,day);
+            dataDialog.show();
+
+        }
+        else
+        {
+            //Light Theme
+            DatePickerDialog dataDialog = new DatePickerDialog(
+                    MainActivity.this, R.style.DialogLight , new DatePickerDialog.OnDateSetListener
+                    () {
+                @Override
+                public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+
+                    TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
+                            .DialogTLight, new
+                            TimePickerDialog
+                                    .OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                    mhour = hourOfDay;
+                                    mminute = minute;
+                                    mday = dayOfMonth;
+                                    mmonth = month +1;
+                                    myear = year;
+
+
+                                    Snackbar.make(findViewById(R.id.drawerLayout),+mday+"" +
+                                            "."+mmonth+"" +
+                                            "."+myear+" || "+mhour+":"+mminute, Snackbar
+                                            .LENGTH_LONG).show();
+                                }
+                            }, hour,minute,true);
+                    timeDialog.show();
+
+                }
+            },year, month,day);
+            dataDialog.show();
+        }
+
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP,);
+
+        //TEST SECTION | END
 
         //Check if car added
         //starting popup
@@ -225,11 +324,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         1);
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-//                startActivityForResult(Intent.createChooser(intent,"Wybierz zdjęcie swojego " +
-//                        "wehikułu:"),REQUEST_CODE);
             }
         });
 
