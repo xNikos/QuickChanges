@@ -1,46 +1,40 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty;
-//TODO: Powiadomienia | Fragment "O autorze" | Optymalizacja? | Smaczki?
+//TODO: Powiadomienia (do ekranu przypomnień z popup'a, sprawdzić wiele powiadomień, formatSTR, P?!)
+//TODO: Usuwanie kart?! (O ile starczy czasu)
+//TODO: Fragment "O autorze" | Optymalizacja? | Smaczki?
 //TODO: nie strzelić sobie w łeb...
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.PersistableBundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -53,21 +47,15 @@ import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.AppDatabase;
-import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.Data;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Database.SharedPreferences;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.AllExpenses;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.naprawaFragment;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.przypomnienieFragment;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.tankowanieFragment;
-import com.rinworks.nikos.fuelfullpaliwoikoszty.Recycler.RVadapter;
+import com.rinworks.nikos.fuelfullpaliwoikoszty.NotificationGenerator.NotificationReciver;
 
 import java.io.IOException;
-import java.net.URI;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
@@ -78,12 +66,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button selectImg;
     ImageView imgSelected;
     private int REQUEST_CODE=1;
-    private DatePickerDialog.OnDateSetListener DataListener;
-    int mhour;
-    int mminute;
-    int mday;
-    int mmonth;
-    int myear;
+
+    Calendar calendar;
+    int mhour =0;
+    int mminute =0;
+    int mday =0;
+    int mmonth =0;
+    int myear =0;
 
 
 
@@ -106,91 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        //TEST SECTION | START
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        final int minute = calendar.get(Calendar.MINUTE);
-
-
-        if (SharedPreferences.getBool("Theme"))
-        {
-            //Dark Theme
-            DatePickerDialog dataDialog = new DatePickerDialog(
-                    MainActivity.this, R.style.DialogDark , new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-
-                    TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
-                            .DialogTDark, new
-                            TimePickerDialog
-                            .OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                            mhour = hourOfDay;
-                            mminute = minute;
-                            mday = dayOfMonth;
-                            mmonth = month +1;
-                            myear = year;
-
-
-                            Snackbar.make(findViewById(R.id.drawerLayout),+mday+"" +
-                                    "."+mmonth+"" +
-                                            "."+myear+" || "+mhour+":"+mminute, Snackbar
-                                    .LENGTH_LONG).show();
-                        }
-                    }, hour,minute,true);
-                    timeDialog.show();
-
-                }
-            },year, month,day);
-            dataDialog.show();
-
-        }
-        else
-        {
-            //Light Theme
-            DatePickerDialog dataDialog = new DatePickerDialog(
-                    MainActivity.this, R.style.DialogLight , new DatePickerDialog.OnDateSetListener
-                    () {
-                @Override
-                public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-
-                    TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
-                            .DialogTLight, new
-                            TimePickerDialog
-                                    .OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                                    mhour = hourOfDay;
-                                    mminute = minute;
-                                    mday = dayOfMonth;
-                                    mmonth = month +1;
-                                    myear = year;
-
-
-                                    Snackbar.make(findViewById(R.id.drawerLayout),+mday+"" +
-                                            "."+mmonth+"" +
-                                            "."+myear+" || "+mhour+":"+mminute, Snackbar
-                                            .LENGTH_LONG).show();
-                                }
-                            }, hour,minute,true);
-                    timeDialog.show();
-
-                }
-            },year, month,day);
-            dataDialog.show();
-        }
-
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP,);
-
-        //TEST SECTION | END
 
         //Check if car added
         //starting popup
@@ -437,13 +341,98 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 null);
                         final EditText tytulV = mViewNotification.findViewById(R.id.TytulValue);
                         final EditText trescV = mViewNotification.findViewById(R.id.TrescValue);
-                        final EditText kiedyV = mViewNotification.findViewById(R.id.KiedyV);
+                        final TextView kiedyV = mViewNotification.findViewById(R.id.KiedyV);
                         okbtn = mViewNotification.findViewById(R.id.tankowanie_ok_btn);
                         cancelbtn = mViewNotification.findViewById(R.id.tankowanie_cancel_btn);
 
                         popupBuilderNotification.setView(mViewNotification);
                         final AlertDialog dialogNotification = popupBuilderNotification.create();
                         dialogNotification.show();
+
+                        //CALENDAR & DATE PICKER
+
+                        kiedyV.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                 calendar = Calendar.getInstance();
+                                 final int cyear = calendar.get(Calendar.YEAR);
+                                 final int cmonth = calendar.get(Calendar.MONTH);
+                                 final int cday = calendar.get(Calendar.DAY_OF_MONTH);
+                                 final int chour = calendar.get(Calendar.HOUR_OF_DAY);
+                                 final int cminute = calendar.get(Calendar.MINUTE);
+
+                                if (SharedPreferences.getBool("Theme"))
+                                {
+                                    //Dark Theme
+                                    DatePickerDialog dataDialog = new DatePickerDialog(
+                                            MainActivity.this, R.style.DialogDark , new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+
+                                            TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
+                                                    .DialogTDark, new
+                                                    TimePickerDialog
+                                                            .OnTimeSetListener() {
+                                                        @Override
+                                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                                            mhour = hourOfDay - chour;
+                                                            mminute = minute - cminute;
+                                                            mday = dayOfMonth - cday;
+                                                            mmonth = month - cmonth;
+                                                            myear = year -cyear;
+
+                                                            setNotificationDate();
+                                                            kiedyV.setText(dayOfMonth+"" +
+                                                                    "."+month+1+"" +
+                                                                    "."+year+"  "+hourOfDay+":"+minute);
+
+                                                        }
+                                                    }, chour,cminute,true);
+                                            timeDialog.show();
+
+                                        }
+                                    }, cyear, cmonth,cday);
+                                    dataDialog.show();
+
+                                }
+                                else
+                                {
+                                    //Light Theme
+                                    DatePickerDialog dataDialog = new DatePickerDialog(
+                                            MainActivity.this, R.style.DialogLight , new DatePickerDialog.OnDateSetListener
+                                            () {
+                                        @Override
+                                        public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+
+                                            TimePickerDialog timeDialog = new TimePickerDialog(MainActivity.this, R.style
+                                                    .DialogTLight, new
+                                                    TimePickerDialog
+                                                            .OnTimeSetListener() {
+                                                        @Override
+                                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                                            mhour = hourOfDay - chour;
+                                                            mminute = minute - cminute;
+                                                            mday = dayOfMonth - cday;
+                                                            mmonth = month - cmonth;
+                                                            myear = year -cyear;
+
+                                                            setNotificationDate();
+                                                            kiedyV.setText(dayOfMonth+"" +
+                                                                    "."+month+1+"" +
+                                                                    "."+year+"  "+hourOfDay+":"+minute);
+
+                                                        }
+                                                    }, chour,cminute,true);
+                                            timeDialog.show();
+
+                                        }
+                                    }, cyear, cmonth,cday);
+                                    dataDialog.show();
+                                }
+                            }
+                        });
 
                         okbtn.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -465,6 +454,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             "Dodano do bazy! :)", Snackbar
                                                     .LENGTH_LONG);
                                     mSnack.show();
+
+                                    //Dodawanie przypomnienia (popup)
+                                    Intent intent = new Intent(getApplicationContext(),
+                                            NotificationReciver.class);
+                                            intent.putExtra("Tytuł",list[0]);
+                                            intent.putExtra("Treść",list[1]);
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),687,
+                                            intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 
                                 } else {
                                     Toast mToast = Toast.makeText(MainActivity.this, "Proszę wypełnij " +
@@ -599,6 +600,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //Setting Notification Date
+    private  void  setNotificationDate()
+    {
+        calendar.add(Calendar.DAY_OF_MONTH,mday);
+        calendar.add(Calendar.MONTH,mmonth);
+        calendar.add(Calendar.YEAR,myear);
+        calendar.add(Calendar.HOUR_OF_DAY,mhour);
+        calendar.add(Calendar.MINUTE,mminute);
+
     }
 
     //Theme toogler
