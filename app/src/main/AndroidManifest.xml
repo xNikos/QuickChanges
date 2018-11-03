@@ -3,6 +3,7 @@
     package="com.rinworks.nikos.fuelfullpaliwoikoszty">
     <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission-sdk-23 android:name="android.permission.SET_ALARM"/>
+    <uses-permission-sdk-23 android:name="android.permission.VIBRATE"/>
 
 
     <application

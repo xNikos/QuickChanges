@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                                             setNotificationDate();
                                                             kiedyV.setText(dayOfMonth+"" +
-                                                                    "."+month+1+"" +
+                                                                    "."+(month+1)+"" +
                                                                     "."+year+"  "+hourOfDay+":"+minute);
 
                                                         }
@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                                             setNotificationDate();
                                                             kiedyV.setText(dayOfMonth+"" +
-                                                                    "."+month+1+"" +
+                                                                    "."+(month+1)+"" +
                                                                     "."+year+"  "+hourOfDay+":"+minute);
 
                                                         }
@@ -460,12 +460,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             NotificationReciver.class);
                                             intent.putExtra("Tytuł",list[0]);
                                             intent.putExtra("Treść",list[1]);
-                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),687,
-                                            intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                                            int NotiID = (int) System.currentTimeMillis();
+                                    Log.d("Passed INT:", ""+NotiID);
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast
+                                            (getApplicationContext(),NotiID, intent,PendingIntent
+                                                    .FLAG_ONE_SHOT);
 
 
                                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                    alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 
                                 } else {
                                     Toast mToast = Toast.makeText(MainActivity.this, "Proszę wypełnij " +
