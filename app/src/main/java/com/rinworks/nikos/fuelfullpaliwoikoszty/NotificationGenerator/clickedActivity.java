@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.rinworks.nikos.fuelfullpaliwoikoszty.Fragments.przypomnienieFragment;
-import com.rinworks.nikos.fuelfullpaliwoikoszty.MainActivity;
 import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 
 public class clickedActivity extends AppCompatActivity {
@@ -18,6 +17,10 @@ public class clickedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState, persistentState);
         Fragment przypomnienie = new przypomnienieFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Bundle data = new Bundle();
+        String[] list = new String[2];
+        data.putStringArray("data",list);
+        setContentView(R.layout.fragment_main_layout);
         fragmentManager.beginTransaction().replace(R.id.fragmentContainer, przypomnienie).commit();
     }
 }

@@ -1,5 +1,5 @@
 package com.rinworks.nikos.fuelfullpaliwoikoszty;
-//TODO: Powiadomienia (do ekranu przypomnień z popup'a, sprawdzić wiele powiadomień, formatSTR, P?!)
+//TODO: Powiadomienia (do ekranu przypomnień z popup'a, formatSTR, P?!)
 //TODO: Usuwanie kart?! (O ile starczy czasu)
 //TODO: Fragment "O autorze" | Optymalizacja? | Smaczki?
 //TODO: nie strzelić sobie w łeb...
@@ -15,7 +15,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -34,7 +33,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -599,6 +597,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .fragmentContainer, przypomnienie)
                         .commit();
                 break;
+            case R.id.about_author:
+
+                final AlertDialog.Builder popupBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.about_apk, null);
+                popupBuilder.setView(mView);
+                final AlertDialog dialog = popupBuilder.create();
+                dialog.show();
+
+                Button okbtn = mView.findViewById(R.id.ok_ab);
+                okbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                break;
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -717,31 +732,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    //private class GetData extends AsyncTask<Void, Void, List<Data>> {
-//
-//    @Override
-//    protected List<Data> doInBackground(Void... params) {
-//        AppDatabase db = Room.databaseBuilder(MainActivity.this, AppDatabase.class, "database").build();
-//
-//        Data data = new Data(0, "36.6L", "166.67ZŁ","476.4KM","7.8L/100KM");
-//
-//        db.DataDao().insertAll(data);
-//        List<Data> data1 = db.DataDao().getAll();
-//        return data1;
-//    }
-//
-//    @Override
-//    protected void onPostExecute(List<Data> data) {
-//        super.onPostExecute(data);
-//        loadRecyclerView(data);
-//    }
-//}
-//
-//    private void loadRecyclerView(List<Data> data) {
-//        // setup RecyclerView
-//        mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_main);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mAdapter = new RVadapter(data);
-//        mRecyclerView.setAdapter(mAdapter);
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
 }
