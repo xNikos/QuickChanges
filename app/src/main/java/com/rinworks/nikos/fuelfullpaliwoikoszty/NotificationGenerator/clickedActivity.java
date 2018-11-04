@@ -15,12 +15,12 @@ public class clickedActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        Fragment przypomnienie = new przypomnienieFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Bundle data = new Bundle();
-        String[] list = new String[2];
-        data.putStringArray("data",list);
-        setContentView(R.layout.fragment_main_layout);
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, przypomnienie).commit();
+//        Fragment przypomnienie = new przypomnienieFragment();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Bundle data = new Bundle();
+//        String[] list = new String[2];
+//        data.putStringArray("data",list);
+        setContentView(R.layout.activity_main);
+//        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, przypomnienie).commit();
     }
 }

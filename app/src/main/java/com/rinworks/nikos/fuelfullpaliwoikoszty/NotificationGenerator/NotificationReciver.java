@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -20,7 +22,6 @@ import com.rinworks.nikos.fuelfullpaliwoikoszty.R;
 import java.util.Calendar;
 
 public class NotificationReciver extends BroadcastReceiver {
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,49 +33,11 @@ public class NotificationReciver extends BroadcastReceiver {
 
         showNotification(context,tytul,tresc,intent);
 
-
-//        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            int notificationId = (int) com.rinworks.nikos.fuelfullpaliwoikoszty.Database
-//                    .SharedPreferences.getFloat("NotiID");
-//            com.rinworks.nikos.fuelfullpaliwoikoszty.Database.SharedPreferences.setFloat
-//                    ("NotiID",notificationId+1);
-//            String channelId = "channel-01";
-//            String channelName = "Channel Name";
-//            int importance = NotificationManager.IMPORTANCE_HIGH;
-//
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                NotificationChannel mChannel = new NotificationChannel(
-//                        channelId, channelName, importance);
-//                notificationManager.createNotificationChannel(mChannel);
-//            }
-//
-//            Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
-//                    .setSmallIcon(R.mipmap.ic_launcher)
-//                    .setContentTitle(tytul)
-//                    .setColorized(true)
-//                    .setContentText(tresc)
-//                    .setAutoCancel(true)
-//                    .setColor(0xfff68a4c)
-//                    .setSound(defaultSoundUri)
-//                    .setVibrate(new long[]{1000,1000,1000,1000});
-//
-//
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//            stackBuilder.addNextIntent(intent);
-//            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-//                    0,
-//                    PendingIntent.FLAG_UPDATE_CURRENT
-//            );
-//
-//            mBuilder.setContentIntent(resultPendingIntent);
-//
-//            notificationManager.notify(notificationId, mBuilder.build());
 }
 
     public void showNotification(Context context, String title, String body, Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         int notificationId = (int) System.currentTimeMillis();
 
@@ -82,15 +45,20 @@ public class NotificationReciver extends BroadcastReceiver {
         String channelName = "Channel Name";
         int importance = NotificationManager.IMPORTANCE_HIGH;
 
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId);
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(
                     channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);
+
+            Vibrator vibrator;
+            vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0,400,200,400}, -1));
         }
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setColorized(true)
                 .setContentText(body)
@@ -98,7 +66,7 @@ public class NotificationReciver extends BroadcastReceiver {
                 .setColor(0xfff68a4c)
                 .setSound(defaultSoundUri)
                 .setLights(0xfff68a4c,3000,3000)
-                .setVibrate(new long[]{0,1000,500,1000});
+                .setVibrate(new long[]{0,400,200,400});
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntent(intent);
@@ -109,7 +77,6 @@ public class NotificationReciver extends BroadcastReceiver {
         mBuilder.setContentIntent(resultPendingIntent);
 
         notificationManager.notify(notificationId, mBuilder.build());
-        Log.d("INT",  ""+notificationId);
     }
     }
 
